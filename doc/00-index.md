@@ -92,17 +92,55 @@ Describing our flow chart machine in [formal terms as a DFA](https://en.wikipedi
 * Our binary language, containing only '0' and '1', can be called $\Sigma$ ('sigma')
 * Our state transition table from earlier, which tells us how to transition between states, can be called $\Delta$ ('delta')
 * Our halting states are the ones with no transitions from them, which in our case is $q_3$ and $q_4$
-* The set of all halting states will be called $F$, such that
+* The set of all halting states will be called $F$
+* Inputs into our machine will be strings called $w$, such that $w=a_1a_2 ... a_n$, where $a_i \in \Sigma$ ^[this notation means that each character, repersented by $a$ is part of the alphabet in our language $\Sigma$, in this case, it's a '0' or a '1']
 
+So each of our states $q_0 ... q_n$ is a possible state in our flow chart machine. If we take an arbitrary input string $w$, for each character $a_i$ in $w$, we use the state transition table $\Delta$ to determine which state we should go to next. We'll let $r_0$ be the state that the charactar $a_0$ from $w$ gets us to, using $\Delta$.
 
+Alright, that's enough math. Grab a coffee to wake yourself up, and let's do a practical example!
+
+Let's say that we have a lamp that isn't working. Using our flow chart:
+
+* We go to the first state $q_0$, which asks if the 'Lamp is plugged in?'
+* We check the lamp, and determine that yes, which adds the character $a_0 = '1'$ to our string $w$, the lamp is plugged in.
+* Using $\Delta$, we determine that from state $q_0$ with input of $1$ transition to the next state, $q_2$, which asks if the 'Bulb is bured out?'
+* We check the bulb, and determine that no, the bulb is not burned out. This adds the character $a_1 = '0'$ to our string $w$.
+* Again using $\Delta$, from state $q_2, with an input of $0$, we transition to our halting state, $q_4$, and determine that the lamp is indeed in need of serious repair.
+* We built the string $w = '1', '0'$, given as input to our flow chart machine $M$, will always end in the halting state $q_4$ - the lamp needs serious repair.
+
+So, our little machine shows us something interesting - for a given input string $w$, it will always yeild the same halting state. This establishes what is meant by 'deterministic' - given a particular input, into our machine, we'll always get the same result, or 'output'.
+
+So, what exactly is a 'Deterministic Finite Automaton'? Automaton means machine, ie, a set of states with a transition table. Finite is a bit pedantic, but means that our input string has a finite number of characters, or more simply put 'the input string ends at some point'. And finally, our machine is deterministic - it always yields tho same output for a given input.
+
+Well, as far as machines go, our flow chart machine $M$ isn't very impressive. Nevertheless, it serves as a decent example for how simple automata works. This is haldly, by any standards, what we would call a 'computer'. This will however, allow us to build up to more complex machines, and a more complete model for modern automata, to eventually gain a complete grasp on the theoretical model behind a true computer.
 
 ### Example: Regular expressions
 
-Determinism and non determinism
-Simulation
-Turing machines and Alan Turing
-Stacks, programs, algorithms
-Halting problem and infinite loops
+A practical and widely used application of finite automata is the use of 'regular expressions'. A very common problem that many computer programs and applications must tackle is something called 'string manipulation'. String manipulation usually involves finding a particular pattern of characters in a human readable text string, and replacing it with something else. You're probably familiar with word processing problems, such as 'Google Docs' or 'Microsoft Word', and most likely you've used their 'find/replace' feature. This is a very simplistic example of string manipulation - the word processor will find the word (or so called 'substring') and replace it with another substring.
+
+Regular expressions allow for extremely powerful manipulations of strings. For instance, suppose I wanted to see if a string contained the words 'her' or 'hair'. I could bulid the regular expression 'h(e|ai)r' ^[the braces and pipe character denote a logical 'or', saying h followed by ('e' OR 'ai') followed by r should be accepted], which would result in the following DFA:
+
+![simple regular expression DFA](img/dfa.png) [@regexfsm]
+
+The input strings $her$ and $hair$ will both end in the accepting halting state $4$ ^[by convention, accepting halting states are denoted by a double circle]. The string  $his$ though, will stop after $h$ has been entered, and it will not be accepted - it will transition to the invisible 'rejecting halting state'.
+
+More complicated regular expressions are frequently used behind the scenes all around us. For instance, if you've ever signed up for an account on a website, you probably had to enter an email address. It's fairly likely that the service you signed up with used a regular expression to determine if your email address was indeed valid ^[though, incidentally, a truly correct regular expression for this particular problem is [notoriously difficult](http://www.regular-expressions.info/email.html)].
+
+Regular expressions range from the very simple, to extremely complicated. Typically a regex is constructed as an NFA, which if you recall from early may be converted to a DFA. All major programming languages will offer some sort of regular expression library, with the de facto standard being [PCRE](http://www.pcre.org/), based off of the regular expression syntax used in the popular programming language 'perl'. Usually, regular expressions will be 'compiled' into their DFA form, which tends to be more simpler, and more efficient to evaluate.
+
+Sufficed to say, regular expressions are quite a powerful tool and a great illustration of a practical application of finite automata. There are numerous resources available to tinker with regular expressions.
+
+## Pushdown automata
+
+To make a more interesting machine, we can add another element
+
+## Turing machines
+
+### Alan Turing - the tragic father of the modern age of computing
+
+### Simulation
+
+### Halting problem and infinite loops
 
 # Digital logic, discrete mathematics
 

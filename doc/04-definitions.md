@@ -2,3 +2,4 @@ FIXME:
 
 - abstraction
 - lexicon
+- deterministic

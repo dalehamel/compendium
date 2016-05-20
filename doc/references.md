@@ -14,6 +14,10 @@ references:
   id: xkcd
   title: 'XKCD'
   URL: http://www.xkcd.com
+- type: article
+  id: regexfsm
+  title: 'Regex to NFA/DFA'
+  URL: http://hackingoff.com/compilers/regular-expression-to-nfa-dfa
 - type: book
   id: cod
   title: 'Computer Organization and Design: The hardware/software interface'
