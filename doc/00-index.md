@@ -132,11 +132,29 @@ Sufficed to say, regular expressions are quite a powerful tool and a great illus
 
 ## Pushdown automata
 
-To make a more interesting machine, we can add another element
+To make a more interesting machine, we can add another element to our automata - a special type of state that is shared by the other discrete states - something called a stack. It's very likely that you're familiar with the idea of a stack of cards from playing any number of card games. The idea behind the stack is pretty simple - visualize a physical stack of cards. We can do to things - add a card to the stack, or remove it. Conventionally, we call adding something to a stack 'pushing' it onto the stack, and removing something from a stack 'popping' it from the stack. Stacks act in a 'first in, last out' manner - if I push a card onto the stack, then push a second card, I pop the second card first. This is why we call thess machines 'Pushdown' automata - the push cards down to the bottom of the stack, by piling new cards on top of them, and removing the new cards first.
+
+Pushdown automata are similar to our finite state automata, but this stack enables them to do something pretty cool. When deciding which state to transition to, they don't just consider their current state and their input - they also consider the top card on the stack. When doing the transition, they can also push something else onto the stack, which will affect how the next state transition happens. In this sense, the stack is a sort of 'shared state' between all other states - we can use it to pass information along, for future state transitions.
+
+If we revise our model state transition table from earlier, we need to add two more columns - one to consider the current element of the stack, and one to potentially push something onto the stack:
+
+|Current state | Input |Top of Stack|  Next state | Push to stack |
+|--------------|-------|------------|-------------|---------------|
+|              |       |            |             |               |
+
 
 ## Turing machines
 
+
+
 ### Alan Turing - the tragic father of the modern age of computing
+
+Turing machines are the namesake of the British mathematician, Alan Turing ^[A recently released movie, 'The Immitation Game', is a dramatic portrayal of his life and work]. Alan Turing was a mathematician who enjoyed problem solving, and was particularly interested in the field of Cryptography. Cryptography uses mathematical principles to take a obfuscate messages. The practical use of cryptography is in encrypting and decrypting messages for private and secure transmission.
+
+Nowadays, we take cryptography for granted - for instance, when you browse the internet you've probably seen a green lock in our web browser - this means the data you are transmitting is being securely encrypted. Likewise, most cell phones have their contents encrypted so that if the phone is lost or stolen, the culprite won't be able to access our private data. Well before these applications however, cryptography had been used in military applications. The famous 'Caesar Cipher' was used by Julias Caesar to send coded messages to his generals. If these messages were intercepted by the enemy, they would would appear as nonsense, and wouldn't offer a tactical advantage. During Alan Turing's time, there was a particularly complicated cipher used during World War II by the Axis forces.
+
+A special machine, called the [Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine) was constructed to encrypt and decrypt messages, such that a the machine decrypted a message would need to be tuned in the same way as the machine that encrypted the message. The Axis forces would send an encrypted message each day, saying what the tuning for the next day should be. This meant that even if an Enigma machine were captured, it would only be useful for decoding the messages sent that day, and then be useless thereafter.
+
 
 ### Simulation
 
@@ -144,8 +162,96 @@ To make a more interesting machine, we can add another element
 
 # Digital logic, discrete mathematics
 
-* Binary
-* Hexadecimal
+Numbers are made up. The ones we use happen to be based on the Arabic number system, which is happens to be base 10. This means that when we count, we 'roll over' the digits at 10. For this reason, there are only 10 symbols - 0 through 9. When we run out of those digits, we add another digit to the left - of increased 'order'. For instance, when we add 1 to 9, we get 10. Since we're out of digits, we add the digit '1' in a new, higher order, and roll back our lower order number to 0. Likewise, when we add 1 to 99, we roll over the lower two orders to '00' and add a new digit '1' of a higher order, making 100. You've probably noticed a pattern - each order is exactly 10 times larger than the previous order.
+
+Long before we standardized on the base 10 system, there were actually other number systems! Some are still around. For instance, you are already intuitively aware of the base 60 number system - that is, if you can tell time! There are 60 seconds to a minute, 60 minutes to an hour. Once we have more than 60 seconds, we roll over and increment the number of minutes. Likewise, when 60 minutes have accumulated, we increase the number of hours.
+
+There are two other number systems that we will need to understand in order to gain a better view into the internal workings of a computer - binary, and hexadecimal.
+
+## Binary
+
+We introduced binary in the last section, where we used it as the input language in our flow chart machine. This wasn't necessary, but it wasn't an accident either - this is the actual language computers understand and operate on. Exactly why computers used binary will be covered shortly, but sufficed to say, it's important to gain a grasp on what exactly it is.
+
+The base 10 number system we are used to is so called because there are 10 digits to work with. In binary, there are only 2 digits to work with - 0, and 1. Thus, binary is considered a base 2 number system. Counting in binary is pretty easy - it's exactly the same as counting in base 10 ^[or at is more frequently called 'decimal' notation]. We start with 0, and add 1. Well, that's all we've got for digits! In order to add 1 again, we'll have to increase the order, so we go from '1' to '10'. To add one yet again, we get to '11'. Adding 1 again, we get '100'. Reading this in decimal looks quite weird - 0, 1, 10, 11, 100, 101, etc. The chart below counts from 0 to 16 in binary. The key thing to remember is that all of our number principles hold the same - when we run out of digits, we push a new number on the left side, which has a higher order. Each higher order number is exactly 2 times larger, instead of 10 times larger as with decimal.
+
+| Decimal | Binary |
+|---------|--------|
+| 0       |  0     |
+| 1       |  1     |
+| 2       |  10    |
+| 3       |  11    |
+| 4       |  100   |
+| 5       |  101   |
+| 6       |  110   |
+| 7       |  111   |
+| 8       |  1000  |
+| 9       |  1001  |
+| 10      |  1010  |
+| 11      |  1011  |
+| 12      |  1100  |
+| 13      |  1101  |
+| 14      |  1110  |
+| 15      |  1111  |
+| 16      |  10000 |
+
+If we look closely at this table, we can see a few patterns:
+
+* Odd numbers end with a 1 - well, that's handy!
+* Likewise, all even numbers end with 0.
+* Look at any number, then look at the number that is double that number. For instance, 3 is '11' and 6 is '110', 7 is '111', and 14 '1110', 6 is '110', 12 is '1100'. To double any number, we just have to add 0 to the right side - neat!
+* Any number directly preceeding a power of two will always be all 1's. Look at 3, 7, and 15.
+
+As we add higher order numbers, we are increasing the number of 'bits'. For instance, we need only a single bit to encode 0 or 1, but we need 4 bits to encode numbers higher than 8, and less than 16. Likewise, we'll need 5 bits to go from 16 to 31, and so on. As an exercise, try counting all the way up to 32. All of these above properties should hold true.
+
+So, how do we actually read this chicken scratch? Well, to decode binary into decimal, we have to do a bit of math unfortunately. Luckily, all we need to know is basic addition, and how to compute powers of two, both of which are easy enough. What we do is look at each digit, and multiply it by two to the power of its order, then add them together.
+
+For instance, looking at the number 11. This is written in binary as 1011. This works out to be, from left to right, $1 * 2^3 + 0 * 2^2 + 1 * 2^1 + 1 * 2^0$ which we can simplify to $8 + 0 + 2 + 1$. Sure enough, adding that all togther, we get 11.
+
+That's it for our crash course on binary! This will come in handy shortly, while we gain an understanding of boolean operations, digital logic, and binary arithmetic.
+
+## Hexadecimal
+
+Usually when we look at binary output, don't actually want to read it as a sequence of 0's and 1's. This is because, unforunately, our brains and eyes aren't quite as adept as a computer at consuming long streams of monotonous digits.
+
+To make binary a bit easy to read, by convention we usually reperesent binary as something called 'hexadecimal'. Hexa meaning '6', and decimal meaning '10', hexadecimal is an extension of our familiar decimal system, but instead of being base 10, it's base 16. Unfortunately, we only have 10 symbols at our disposal! So, we grudgingly have to add 6 more, and being rather uninventive, we just pull them from our normal alphabet. Thus, hexadecimal is the digits 0-9, including letters A through F, the first 6 letters of the alphabet. By convention, hex is usually written in capital letters, but doesn't need to be.
+
+One of the reasons why hexedecimal is so useful is because it being a base 16 number system, it can encode 4 digits worth of binary into just one character. That's pretty handy, as it cuts the size down by a factor of 4. Computers also typically deal with binary numbers in a particular set 'word' size. That is, if you have a 16 bit computer processor, the word size of the system will be 16 bits. Nowadays, you've probably heard marketing jargon about '64' bit and '32' bit processors. This is the maximum size of numbers that the computer can work with in hardware.
+
+By convention, we usually do something called 'zero padding' the left size of a binary number to a particular word size. For instance, if our word size is 16, we start with 16 0's, instead of just a single 0. Revisiting our table from earlier, we'll see how the decimal corresponds to zero-padded binary, and hexadecimal:
+
+| Decimal | Binary                | Hexadecimal |
+|---------|-----------------------|-------------|
+| 0       |  0000 0000 0000 0000  | 0000        |
+| 1       |  0000 0000 0000 0001  | 0001        |
+| 2       |  0000 0000 0000 0010  | 0002        |
+| 3       |  0000 0000 0000 0011  | 0003        |
+| 4       |  0000 0000 0000 0100  | 0004        |
+| 5       |  0000 0000 0000 0101  | 0005        |
+| 6       |  0000 0000 0000 0110  | 0006        |
+| 7       |  0000 0000 0000 0111  | 0007        |
+| 8       |  0000 0000 0000 1000  | 0008        |
+| 9       |  0000 0000 0000 1001  | 0009        |
+| 10      |  0000 0000 0000 1010  | 000A        |
+| 11      |  0000 0000 0000 1011  | 000B        |
+| 12      |  0000 0000 0000 1100  | 000C        |
+| 13      |  0000 0000 0000 1101  | 000D        |
+| 14      |  0000 0000 0000 1110  | 000E        |
+| 15      |  0000 0000 0000 1111  | 000F        |
+| 16      |  0000 0000 0001 0000  | 0010        |
+
+Well, that's not very exciting is it! But notice a couple of things:
+
+* We group the zero-padded binary into groups of 4 bits, each hexedecimal character represents one of these.
+* All of the hexadecimal numbers from 0-9 are the same, and after that we just keep on counting with letters.
+* F is the new 9, so to speak, once we've hit F, we need to increase our order to get any higher.
+* The hexadecimal '10' is actually '16 in decimal'... that might get confusing, since they use the same digits!
+
+We don't get a whole lot of value out of writting out the padded zeros in hexadecimal, so we can often abbreviate this by ommitting the zeros altogether. To tell the difference between decimal and hexadecimal, we often preceed hexadecimal with '0x'. So for instance if we ready 0x10, we know that is 16 in hexadecimal, **not** 10 in decimal.
+
+Hexadecimal is going to come in real handy later on, when we closely examine the internal operations of a computer processor. The main thing you need to know about hexadecimal is that it's really just a convenient shorthand. You might be asking 'why bother with hexadecimal at all; why not just use decimal?' The reasoning there is convenience - 16 is a power of 2, 10 is not. As mentioned earlier, since 16 is $2^4$, we can encode 4 bits of binary in a single hexadecimal character. While we're abbreviating and coming up with shorthands, let's also shorten 'hexadecimal' to simply 'hex'^[this is not to be confused with the kind if hex that a witch or wizard might use, rather, it's just computer scientists being lazy].
+
+## Boolean logic
+
 * AND, OR, NOT
 * Transistors / D-latches
 
